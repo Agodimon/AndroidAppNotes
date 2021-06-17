@@ -20,7 +20,7 @@ import android.widget.TextView;
 public class NotesFragment extends Fragment {
     private boolean isLandscape;
     public static final String CURRENT_NOTE = "CurrentNote";
-    private NoteData currentNote; // Текущая позиция (выбранный город)
+    private NoteData currentNote; // Текущая позиция (выбранная заметка)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -36,7 +36,7 @@ public class NotesFragment extends Fragment {
         initList(view);
     }
 
-    // создаём список городов на экране из массива в ресурсах
+    // создаём список записок на экране из массива в ресурсах
     private void initList(View view) {
         LinearLayout layoutView = (LinearLayout)view;
         String[] notes = getResources().getStringArray(R.array.notes);
@@ -86,10 +86,10 @@ public class NotesFragment extends Fragment {
     @Override
     public void onAttach(@NonNull  Context context) {
         super.onAttach(context);
-        // Определение, можно ли будет расположить рядом герб в другом
+        // Определение, можно ли будет расположить рядом описание заметки (ИМЯ,ОПИСАНИЕ,ДАТА) в другом
 //        фрагменте
         isLandscape = getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE;
-// Если можно нарисовать рядом герб, то сделаем это
+// Если можно ВСТАВИТЬ рядом ТЕКС ОПИСАНИЕ, то сделаем это
 
 
     }

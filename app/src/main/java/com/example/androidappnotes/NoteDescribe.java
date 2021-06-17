@@ -42,7 +42,7 @@ public class NoteDescribe extends Fragment {
 
 
 
-        TextView cityName=view.findViewById(R.id.textView);
+        TextView cityName=view.findViewById(R.id.fragment_container);
         cityName.setText(noteData.describeContents());
 
         return view;
