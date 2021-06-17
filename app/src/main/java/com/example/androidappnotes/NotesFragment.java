@@ -1,7 +1,6 @@
 package com.example.androidappnotes;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -17,10 +16,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Date;
+
 public class NotesFragment extends Fragment {
     private boolean isLandscape;
     public static final String CURRENT_NOTE = "CurrentNote";
     private NoteData currentNote; // Текущая позиция (выбранная заметка)
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -38,7 +40,7 @@ public class NotesFragment extends Fragment {
 
     // создаём список записок на экране из массива в ресурсах
     private void initList(View view) {
-        LinearLayout layoutView = (LinearLayout)view;
+        LinearLayout layoutView = (LinearLayout) view;
         String[] notes = getResources().getStringArray(R.array.notes);
 // В этом цикле создаём элемент TextView,
 // заполняем его значениями,// и добавляем на экран.
@@ -51,12 +53,11 @@ public class NotesFragment extends Fragment {
             tv.setText(note);
             tv.setTextSize(30);
             layoutView.addView(tv);
-            final int index =i;
-            tv.setOnClickListener(v->{
-                String date="__.__.__";
-                currentNote =new NoteData(index,note,date);
+            final int index = i;
+            tv.setOnClickListener(v -> {
+                currentNote = new NoteData(note, note, new Date());
 
-                showPortDescribeNote(currentNote);
+                showDescribeNote(currentNote);
             });
         }
     }
@@ -71,10 +72,10 @@ public class NotesFragment extends Fragment {
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if (savedInstanceState!=null){
-            currentNote =savedInstanceState.getParcelable(CURRENT_NOTE);
-        }else {
-            currentNote =new NoteData(0,getResources().getStringArray(R.array.notes)[0],"__.__.__");
+        if (savedInstanceState != null) {
+            currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
+        } else {
+            currentNote = new NoteData("No name", getResources().getStringArray(R.array.notes)[0], new Date());
         }
 
         if (isLandscape) {
@@ -84,41 +85,50 @@ public class NotesFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(@NonNull  Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         // Определение, можно ли будет расположить рядом описание заметки (ИМЯ,ОПИСАНИЕ,ДАТА) в другом
 //        фрагменте
-        isLandscape = getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE;
+        isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 // Если можно ВСТАВИТЬ рядом ТЕКС ОПИСАНИЕ, то сделаем это
 
 
     }
 
     private void showDescribeNote(NoteData currentCity) {
-        if (isLandscape){
+        if (isLandscape) {
             showLandDescribe(currentCity);
-        }else {
+        } else {
             showPortDescribeNote(currentCity);
         }
     }
 
     private void showLandDescribe(NoteData currentCity) {
-NoteDescribe detail= NoteDescribe.newInstance(currentCity);
+        NoteDescribeFragment detail = NoteDescribeFragment.newInstance(currentCity);
 
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.describeNote,detail);
+        fragmentTransaction.replace(R.id.fl_describe_note_container, detail);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.commit();
 
     }
 
 
-    private void showPortDescribeNote(NoteData noteData){
-    Intent intent=new Intent();
-    intent.setClass(getActivity(), NoteDescribe.class);
-    intent.putExtra(NoteDescribe.ARG_INDEX, noteData);
-    startActivity(intent);
-}
+    private void showPortDescribeNote(NoteData noteData) {
+        NoteDescribeFragment detail = NoteDescribeFragment.newInstance(noteData);
+
+        String backStateName = this.getClass().getName();
+
+        FragmentManager manager = requireActivity().getSupportFragmentManager();
+        boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
+
+        if (!fragmentPopped) { //fragment not in back stack, create it.
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.replace(R.id.fl_notes_container, detail);
+            ft.addToBackStack(backStateName);
+            ft.commit();
+        }
+    }
 
 }

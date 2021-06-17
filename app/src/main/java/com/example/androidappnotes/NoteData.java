@@ -3,22 +3,51 @@ package com.example.androidappnotes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class NoteData implements Parcelable {
-    private int noteName;
-    private String noteDescribe;
-    private String noteDateCreate;
+    private final String name;
+    private final String describe;
+    private final Date date;
 
+    public NoteData(String name, String describe, Date date) {
+        this.name = name;
+        this.describe = describe;
+        this.date = date;
+    }
 
-    public NoteData(int noteName, String noteDescribe, String noteDateCreate) {
-        this.noteName = noteName;
-        this.noteDescribe = noteDescribe;
-        this.noteDateCreate = noteDateCreate;
+    public String getName() {
+        return name;
+    }
+
+    public String getDescribe() {
+        return describe;
+    }
+
+    public Date getDate() {
+        return date;
     }
 
     protected NoteData(Parcel in) {
-        noteName = in.readInt();
-        noteDescribe = in.readString();
-        noteDateCreate = in.readString();
+        name = in.readString();
+        describe = in.readString();
+        date = stringToDate(in.readString());
+    }
+
+    private Date stringToDate(String text) {
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.getDefault());
+        Date date;
+
+        try {
+            date = formatter.parse(text);
+        } catch (ParseException e) {
+            date = new Date();
+        }
+
+        return date;
     }
 
     public static final Creator<NoteData> CREATOR = new Creator<NoteData>() {
@@ -40,8 +69,8 @@ public class NoteData implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(noteName);
-        dest.writeString(noteDescribe);
-        dest.writeString(noteDateCreate);
+        dest.writeString(name);
+        dest.writeString(describe);
+        dest.writeString(date.toString());
     }
 }
