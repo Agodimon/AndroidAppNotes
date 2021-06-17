@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="cities">
-        <item>Название заметки</item>
-        <item>Описание заметки</item>
+    <string-array name="notes">
+        <item>Заметка 1</item>
+        <item>Заметка 2</item>
+        <item>Заметка 3</item>
+    </string-array>
+
+    <string-array name="describe_notes">
+        <item>Наименование</item>
+        <item>Описание</item>
         <item>Дата создания</item>
     </string-array>
 
-    <integer-array name="coat_of_arms_notes">
-        <item>0</item><!-- герб Москвы -->
-        <item>1</item><!-- герб Санкт-Петербурга -->
-        <item>2</item><!-- герб Екатеринбурга -->
-
-    </integer-array>
 </resources>

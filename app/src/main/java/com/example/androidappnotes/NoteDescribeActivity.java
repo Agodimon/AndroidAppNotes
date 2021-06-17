@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
-public class CoatOfArmsActivity extends AppCompatActivity {
+public class NoteDescribeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,7 +16,7 @@ public class CoatOfArmsActivity extends AppCompatActivity {
             return;
         }
     if (savedInstanceState==null){
-        CoatOfArmsFragment details =new CoatOfArmsFragment();
+        NoteDescribe details =new NoteDescribe();
         details.setArguments(getIntent().getExtras());
 
         getSupportFragmentManager()

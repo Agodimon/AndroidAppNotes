@@ -6,9 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <fragment
+    <fragment  android:name="com.example.androidappnotes.NotesFragment"
         android:id="@+id/notes"
-        android:name="com.example.androidappnotes.CitiesFragment"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
