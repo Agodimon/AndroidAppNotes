@@ -1,55 +1,13 @@
 package com.example.androidappnotes;
 
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.Calendar;
+
 
 public class NoteData implements Parcelable {
-    private final String name;
-    private final String describe;
-    private final Date date;
-
-    public NoteData(String name, String describe, Date date) {
-        this.name = name;
-        this.describe = describe;
-        this.date = date;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescribe() {
-        return describe;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    protected NoteData(Parcel in) {
-        name = in.readString();
-        describe = in.readString();
-        date = stringToDate(in.readString());
-    }
-
-    private Date stringToDate(String text) {
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.getDefault());
-        Date date;
-
-        try {
-            date = formatter.parse(text);
-        } catch (ParseException e) {
-            date = new Date();
-        }
-
-        return date;
-    }
-
     public static final Creator<NoteData> CREATOR = new Creator<NoteData>() {
         @Override
         public NoteData createFromParcel(Parcel in) {
@@ -61,16 +19,56 @@ public class NoteData implements Parcelable {
             return new NoteData[size];
         }
     };
+    private String title;
+    private String content;
+    private Calendar creationDate;
+
+    public NoteData(String title, String content, Calendar creationDate) {
+        this.title = title;
+        this.content = content;
+        this.creationDate = creationDate;
+    }
+
+    protected NoteData(Parcel in) {
+        title = in.readString();
+        content = in.readString();
+        creationDate = (Calendar) in.readSerializable();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(content);
+        dest.writeSerializable(creationDate);
+    }
 
     @Override
     public int describeContents() {
         return 0;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(describe);
-        dest.writeString(date.toString());
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Calendar getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Calendar creationDate) {
+        this.creationDate = creationDate;
     }
 }
+
