@@ -24,6 +24,17 @@ public class ListNoteFragment extends Fragment {
     private NoteData[] notes;
     private NoteData currentNote;
 
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+
+        super.onAttach(context);
+
+        Configuration configuration = getResources().getConfiguration();
+        isLandscape=configuration.orientation==Configuration.ORIENTATION_LANDSCAPE;
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -36,21 +47,11 @@ public class ListNoteFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         initList(view);
-        getOrientation(savedInstanceState);
+
 
     }
 
-    public void getOrientation(@Nullable Bundle savedInstanceState) {
-        isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        if (savedInstanceState != null) {
-            currentNote = savedInstanceState.getParcelable(NoteFragment.CURRENT_NOTE);
-        } else {
-            currentNote = notes[0];
-        }
-        if (isLandscape) {
-            showLandNote(currentNote);
-        }
-    }
+
 
     private void initList(View view) {
         notes = new NoteData[]{
