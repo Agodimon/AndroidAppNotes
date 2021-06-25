@@ -1,10 +1,14 @@
-package com.example.androidappnotes;
+package com.example.androidappnotes.ui;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
+
+import com.example.androidappnotes.NoteData;
+import com.example.androidappnotes.R;
+
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
