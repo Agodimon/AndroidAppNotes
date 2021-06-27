@@ -16,55 +16,27 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.androidappnotes.observer.Publisher;
 import com.example.androidappnotes.ui.ListNoteFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Objects;
+
 
 public class MainActivity extends AppCompatActivity {
-
+    private com.example.androidappnotes.ui.Navigation navigation;
+    private Publisher publisher = new Publisher();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.list_of_notes_fragment_container, new ListNoteFragment());
-        fragmentTransaction.commit();
-        Toolbar toolbar = initToolbar();
-        initDrawer(toolbar);
+        navigation = new com.example.androidappnotes.ui.Navigation(getSupportFragmentManager());
+        initToolbar();
+        getNavigation().addFragment(ListNoteFragment.newInstance(), false);
     }
 
-    private void initDrawer(Toolbar toolbar) {
-        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar,
-                R.string.drawer_open,
-                R.string.drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (navigateMenu(id)) {
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            }
-            return false;
-        });
-    }
-
-    private boolean navigateMenu(int id) {
-        switch (id) {
-            case R.id.nav_settings:
-                Toast.makeText(this, getResources().getString(R.string.settings), Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.nav_about:
-                Toast.makeText(this, getResources().getString(R.string.about), Toast.LENGTH_LONG).show();
-                return true;
-        }
-        return false;
-    }
 
         @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -94,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, getResources().getString(R.string.menu_sort), Toast.LENGTH_LONG).show();
                 return true;
             case R.id.menu_add_photo:
-                Toast.makeText(this, getResources().getString(R.string.menu_add_photo), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.menu_add_photo, Toast.LENGTH_LONG).show();
                 return true;
             case R.id.menu_send:
                 Toast.makeText(this, getResources().getString(R.string.menu_send), Toast.LENGTH_LONG).show();
@@ -107,9 +79,25 @@ public class MainActivity extends AppCompatActivity {
         return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
-    private Toolbar initToolbar() {
+    private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        return toolbar;
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    public com.example.androidappnotes.ui.Navigation getNavigation() {
+        return navigation;
+    }
+
+    public Publisher getPublisher() {
+        return publisher;
+    }
+
 }
