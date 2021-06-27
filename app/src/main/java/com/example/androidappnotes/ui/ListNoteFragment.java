@@ -31,27 +31,31 @@ public class ListNoteFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
 
         super.onAttach(context);
+            isLandscape = getResources().getConfiguration().orientation ==
+                    Configuration.ORIENTATION_LANDSCAPE;
 
-        Configuration configuration = getResources().getConfiguration();
-        isLandscape=configuration.orientation==Configuration.ORIENTATION_LANDSCAPE;
-
+            if (isLandscape) {
+                showLandNote(currentNote);
+            }
     }
 
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+
             return inflater.inflate(R.layout.fragment_list_of_notes, container, false);
+
         }
 
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             initNotes();
+
             RecyclerView recyclerView = view.findViewById(R.id.notes_recycler_view);
             initRecyclerView(recyclerView, notes);
         }
-
         private void initNotes() {
             notes = new NoteData[]{
                     new NoteData(getString(R.string.first_note_title),
@@ -114,7 +118,6 @@ public class ListNoteFragment extends Fragment {
                             getString(R.string.twelfth_note_content),
                             Calendar.getInstance(),
                             ContextCompat.getColor(getContext(), R.color.dark_turquoise)),
-
             };
         }
 
@@ -137,11 +140,14 @@ public class ListNoteFragment extends Fragment {
         @Override
         public void onSaveInstanceState(@NonNull Bundle outState) {
             outState.putParcelable(NoteFragment.CURRENT_NOTE, currentNote);
+            if (outState != null) {
+                currentNote = outState.getParcelable(NoteFragment.CURRENT_NOTE);
+            } else {
+                currentNote = notes[0];
+            }
             super.onSaveInstanceState(outState);
         }
-
-
-
+        
         private void showNote(NoteData currentNote) {
             if (isLandscape) {
                 showLandNote(currentNote);
