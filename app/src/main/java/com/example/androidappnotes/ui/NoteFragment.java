@@ -20,7 +20,7 @@ import com.example.androidappnotes.observer.Publisher;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
+
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
@@ -31,6 +31,7 @@ public class NoteFragment extends Fragment {
     public static final String CURRENT_DATA = "currentData";
     private NoteData note;
     private Publisher publisher;
+
 
     private EditText titleText;
     private EditText contentText;

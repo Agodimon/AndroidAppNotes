@@ -77,6 +77,14 @@ public class ListNoteFragment extends Fragment {
             recyclerView = view.findViewById(R.id.notes_recycler_view);
             initRecyclerView(recyclerView, data);
             setHasOptionsMenu(true);
+
+            if (savedInstanceState != null) {
+                data = savedInstanceState.getParcelable(CURRENT_DATA);
+                currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
+            } else {
+                currentNote = data.getNote(0);
+            }
+
         }
 
     @Override
@@ -120,16 +128,7 @@ public class ListNoteFragment extends Fragment {
         outState.putParcelable(CURRENT_DATA, data);
         super.onSaveInstanceState(outState);
     }
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            data = savedInstanceState.getParcelable(CURRENT_DATA);
-            currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
-        } else {
-            currentNote = data.getNote(0);
-        }
-    }
+
 
         private void showNote(NoteData currentNote) {
             if (isLandscape) {
