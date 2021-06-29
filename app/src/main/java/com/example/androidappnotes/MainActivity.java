@@ -1,7 +1,12 @@
 package com.example.androidappnotes;
+
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -10,68 +15,69 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.example.androidappnotes.ui.ListNoteFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 
-public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuItemClickListener {
-
-    private DrawerLayout drawer;
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.list_of_notes_fragment_container, new ListNoteFragment());
+        fragmentTransaction.commit();
+        Toolbar toolbar = initToolbar();
+        initDrawer(toolbar);
+    }
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        if(savedInstanceState == null) {
-            initStartFragment();
-        }
-
-        drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
+    private void initDrawer(Toolbar toolbar) {
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar,
+                R.string.drawer_open,
+                R.string.drawer_close);
         drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.nav_about) {
-                Snackbar.make(findViewById(R.id.drawer_layout), "About", Snackbar.LENGTH_SHORT).show();
-            } else {
-                Snackbar.make(findViewById(R.id.drawer_layout), "Settings", Snackbar.LENGTH_SHORT).show();
+            int id = item.getItemId();
+            if (navigateMenu(id)) {
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
             }
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
+            return false;
         });
-        toggle.syncState();
     }
 
-    private void initStartFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        ListNoteFragment listFragment = new ListNoteFragment();
-        fragmentTransaction.add(R.id.list_of_notes_fragment_container, listFragment);
-        fragmentTransaction.commit();
+    private boolean navigateMenu(int id) {
+        switch (id) {
+            case R.id.nav_settings:
+                Toast.makeText(this, getResources().getString(R.string.settings), Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.nav_about:
+                Toast.makeText(this, getResources().getString(R.string.about), Toast.LENGTH_LONG).show();
+                return true;
+        }
+        return false;
     }
 
-    @Override
+        @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+
         MenuItem search = menu.findItem(R.id.menu_search);
         SearchView searchView = (SearchView) search.getActionView();
-        MenuItem sort = menu.findItem(R.id.menu_sort);
-        MenuItem addPhoto = menu.findItem(R.id.menu_add_photo);
-        MenuItem send = menu.findItem(R.id.menu_send);
-        send.setOnMenuItemClickListener(this);
-        addPhoto.setOnMenuItemClickListener(this);
-        sort.setOnMenuItemClickListener(this);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Snackbar.make(findViewById(R.id.drawer_layout), query, Snackbar.LENGTH_SHORT).show();
                 return true;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 return true;
@@ -81,17 +87,29 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        Snackbar.make(findViewById(R.id.drawer_layout), item.getTitle().toString(), Snackbar.LENGTH_SHORT).show();
-        return false;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch(id){
+            case R.id.menu_sort:
+                Toast.makeText(this, getResources().getString(R.string.menu_sort), Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.menu_add_photo:
+                Toast.makeText(this, getResources().getString(R.string.menu_add_photo), Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.menu_send:
+                Toast.makeText(this, getResources().getString(R.string.menu_send), Toast.LENGTH_LONG).show();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+    private boolean checkLandScapeOrientation() {
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    private Toolbar initToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        return toolbar;
     }
 }
