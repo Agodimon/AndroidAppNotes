@@ -101,6 +101,8 @@ public class NotesAdapter extends RecyclerView.Adapter<com.example.androidappnot
             }
         }
 
+
+
         public LinearLayout getItemLayout() {
             return itemLayout;
         }

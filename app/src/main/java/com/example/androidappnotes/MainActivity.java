@@ -38,47 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-//        @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.main_menu, menu);
-//
-//        MenuItem search = menu.findItem(R.id.menu_search);
-//        SearchView searchView = (SearchView) search.getActionView();
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                Snackbar.make(findViewById(R.id.drawer_layout), query, Snackbar.LENGTH_SHORT).show();
-//                return true;
-//            }
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                return true;
-//            }
-//        });
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//        switch(id){
-//            case R.id.menu_sort:
-//                Toast.makeText(this, getResources().getString(R.string.menu_sort), Toast.LENGTH_LONG).show();
-//                return true;
-//            case R.id.menu_add_photo:
-//                Toast.makeText(this, R.string.menu_add_photo, Toast.LENGTH_LONG).show();
-//                return true;
-//            case R.id.menu_send:
-//                Toast.makeText(this, getResources().getString(R.string.menu_send), Toast.LENGTH_LONG).show();
-//                return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
-    private boolean checkLandScapeOrientation() {
-        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-    }
-
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
