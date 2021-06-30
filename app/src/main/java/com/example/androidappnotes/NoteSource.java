@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class NoteSource implements Parcelable {
+public class NoteSource implements Parcelable, com.example.androidappnotes.data.NoteSource {
 
 
 
@@ -100,11 +100,33 @@ public class NoteSource implements Parcelable {
         return notes.get(position);
     }
 
+    @Override
+    public NoteData getNoteData(int position) {
+        return null;
+    }
+
     public int size() {
         return notes.size();
     }
 
-    public void deleteNote(int position) {
+
+
+    @Override
+    public void updateNoteData(int position, NoteData noteData) {
+        notes.set(position, noteData);
+    }
+
+    @Override
+    public void addCardNote(NoteData noteData) {
+        notes.add(noteData);
+    }
+
+    @Override
+    public void clearCardNote() {
+        notes.clear();
+    }
+
+    public void deleteNoteData(int position) {
         notes.remove(position);
     }
 
@@ -112,9 +134,7 @@ public class NoteSource implements Parcelable {
         notes.set(position, note);
     }
 
-    public void addNote(NoteData note) {
-        notes.add(note);
-    }
+
 
     public String getDateOfCreation() {
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy",

@@ -2,6 +2,9 @@ package com.example.androidappnotes.ui;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
@@ -13,6 +16,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.Date;
 import java.util.Objects;
 import android.content.Context;
 import com.example.androidappnotes.NoteData;
@@ -75,7 +80,8 @@ public class ListNoteFragment extends Fragment {
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             recyclerView = view.findViewById(R.id.notes_recycler_view);
-            initRecyclerView(recyclerView, data);
+            initView(view);
+
             setHasOptionsMenu(true);
 
             if (savedInstanceState != null) {
@@ -88,13 +94,45 @@ public class ListNoteFragment extends Fragment {
         }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.note_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_add:
+                data.addCardNote(new NoteData("Заголовок " + data.size(),
+                        "Описание " + data.size(),
+                        new Date().toString(),
+                        2));
+                adapter.notifyItemInserted(data.size() - 1);
+                recyclerView.scrollToPosition(data.size() - 1);
+                return true;
+            case R.id.action_clear:
+                data.clearCardNote();
+                adapter.notifyDataSetChanged();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
     public void onDetach() {
         navigation = null;
         publisher = null;
         super.onDetach();
     }
 
-    private void initRecyclerView(RecyclerView recyclerView, NoteSource data) {
+    private void initView(View view) {
+        recyclerView = view.findViewById(R.id.notes_recycler_view);
+// Получим источник данных для списка
+        data = new NoteSource(getResources()).init();
+        initRecyclerView();
+    }
+
+    private void initRecyclerView() {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
