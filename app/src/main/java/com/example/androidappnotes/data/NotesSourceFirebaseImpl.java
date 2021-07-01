@@ -17,6 +17,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,8 @@ public class NotesSourceFirebaseImpl implements NoteSource {
     private List<NoteData> notesData = new ArrayList<>();
 
     @Override
-    public NoteSource init(NoteSourceResponse noteSourceResponse) {
+    public NotesSourceFirebaseImpl init(final NoteSourceResponse noteSourceResponse) {
+        notesData.add(new NoteData("ad", "sdf", new Date().toString(), 2));
         collection.orderBy(NoteDataMapping.Fields.CREATION_DATE, Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

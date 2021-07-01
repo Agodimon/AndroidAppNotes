@@ -1,8 +1,10 @@
 package com.example.androidappnotes.data;
 
+import android.os.Parcelable;
+
 import com.example.androidappnotes.NoteData;
 
-public interface NoteSource  {
+public interface NoteSource{
     NoteSource init(NoteSourceResponse noteSourceResponse);
 
     NoteData getNoteData(int position);

@@ -1,5 +1,5 @@
 package com.example.androidappnotes.ui;
-import android.content.res.Configuration;
+
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -8,23 +8,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Date;
 import java.util.Objects;
+
 import android.content.Context;
+
 import com.example.androidappnotes.NoteData;
-import com.example.androidappnotes.NoteSource;
+import com.example.androidappnotes.NoteSourceImpl;
 import com.example.androidappnotes.R;
+import com.example.androidappnotes.data.NoteSource;
 import com.example.androidappnotes.data.NoteSourceResponse;
+import com.example.androidappnotes.data.NotesSourceFirebaseImpl;
 import com.example.androidappnotes.observer.Publisher;
 
 import static com.example.androidappnotes.ui.NoteFragment.CURRENT_DATA;
@@ -62,38 +65,44 @@ public class ListNoteFragment extends Fragment {
     }
 
 
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        if (data == null) {
+//            data = new NoteSource(getResources()).init(com.example.androidappnotes.data.NoteSource::clearCardNote);
+//        }
+//    }
+
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (data == null) {
-            data = new NoteSource(getResources()).init(com.example.androidappnotes.data.NoteSource::clearCardNote);
-        }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        return inflater.inflate(R.layout.fragment_list_of_notes, container, false);
+
     }
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initView(view);
 
-            return inflater.inflate(R.layout.fragment_list_of_notes, container, false);
+        setHasOptionsMenu(true);
 
-        }
-
-        @Override
-        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            recyclerView = view.findViewById(R.id.notes_recycler_view);
-            initView(view);
-
-            setHasOptionsMenu(true);
-
-            if (savedInstanceState != null) {
-                data = savedInstanceState.getParcelable(CURRENT_DATA);
-                currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
-            } else {
-                currentNote = data.getNote(0);
+        data = new NotesSourceFirebaseImpl().init(new NoteSourceResponse() {
+            @Override
+            public void initialized(com.example.androidappnotes.data.NoteSource noteSource) {
+                adapter.notifyDataSetChanged();
             }
-
+        });
+        adapter.setDataSource(data);
+        if (savedInstanceState != null) {
+            data = savedInstanceState.getParcelable(CURRENT_DATA);
+            currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
+        } else {
+            currentNote = data.getNoteData(0);
         }
+
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -102,14 +111,14 @@ public class ListNoteFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_add:
                 data.addCardNote(new NoteData("Заголовок " + data.size(),
                         "Описание " + data.size(),
                         new Date().toString(),
                         currentNote.getColor()));
-                adapter.notifyItemInserted(data.size() - 1);
-                recyclerView.scrollToPosition(data.size() - 1);
+                adapter.notifyItemInserted(0);
+                recyclerView.scrollToPosition(0);
                 return true;
             case R.id.action_clear:
                 data.clearCardNote();
@@ -130,7 +139,7 @@ public class ListNoteFragment extends Fragment {
     private void initView(View view) {
         recyclerView = view.findViewById(R.id.notes_recycler_view);
 // Получим источник данных для списка
-        data = new NoteSource(getResources()).init(com.example.androidappnotes.data.NoteSource::clearCardNote);
+        data = new NoteSourceImpl(getResources()).init(com.example.androidappnotes.data.NoteSource::clearCardNote);
         initRecyclerView();
     }
 
@@ -144,12 +153,12 @@ public class ListNoteFragment extends Fragment {
             moveToLastPosition = false;
         }
 
-        adapter = new NotesAdapter(data, this);
+        adapter = new NotesAdapter(this);
         adapter.setOnItemClickListener((position, note) -> {
-            navigation.addFragment(NoteFragment.newInstance(data.getNote(position)),
+            navigation.addFragment(NoteFragment.newInstance(data.getNoteData(position)),
                     true);
             publisher.subscribe(note1 -> {
-                data.changeNote(position, note1);
+                data.updateNoteData(position, note1);
                 adapter.notifyItemChanged(position);
             });
         });
@@ -170,16 +179,17 @@ public class ListNoteFragment extends Fragment {
         MenuInflater inflater = requireActivity().getMenuInflater();
         inflater.inflate(R.menu.note_context_menu, menu);
     }
+
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int position = adapter.getMenuPosition();
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.action_update:
                 data.updateNoteData(position,
                         new NoteData("Note № " + position,
-                                data.getNote(position).getContent(),
-                                data.getNote(position).getCreationDate(),
-                                data.getNote(position).getColor()));
+                                data.getNoteData(position).getContent(),
+                                data.getNoteData(position).getCreationDate(),
+                                data.getNoteData(position).getColor()));
                 adapter.notifyItemChanged(position);
                 return true;
             case R.id.action_delete:
@@ -189,38 +199,39 @@ public class ListNoteFragment extends Fragment {
         }
         return super.onContextItemSelected(item);
     }
+
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable(CURRENT_NOTE, currentNote);
-        outState.putParcelable(CURRENT_DATA, data);
+//       outState.putParcelable(CURRENT_DATA, data);
         super.onSaveInstanceState(outState);
     }
 
 
-        private void showNote(NoteData currentNote) {
-            if (isLandscape) {
-                showLandNote(currentNote);
-            } else {
-                showPortNote(currentNote);
-            }
-        }
+//        private void showNote(NoteData currentNote) {
+//            if (isLandscape) {
+//                showLandNote(currentNote);
+//            } else {
+//                showPortNote(currentNote);
+//            }
+//        }
 
-        private void showLandNote(NoteData currentNote) {
-            NoteFragment fragment = NoteFragment.newInstance(currentNote);
-            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.note_layout, fragment);
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            fragmentTransaction.commit();
-        }
+//        private void showLandNote(NoteData currentNote) {
+//            NoteFragment fragment = NoteFragment.newInstance(currentNote);
+//            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentTransaction.replace(R.id.note_layout, fragment);
+//            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+//            fragmentTransaction.commit();
+//        }
 
-        private void showPortNote(NoteData currentNote) {
-            NoteFragment fragment = NoteFragment.newInstance(currentNote);
-            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.addToBackStack("list_fragment");
-            fragmentTransaction.replace(R.id.list_of_notes_fragment_container, fragment);
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            fragmentTransaction.commit();
-        }
-    }
+//        private void showPortNote(NoteData currentNote) {
+//            NoteFragment fragment = NoteFragment.newInstance(currentNote);
+//            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentTransaction.addToBackStack("list_fragment");
+//            fragmentTransaction.replace(R.id.list_of_notes_fragment_container, fragment);
+//            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+//            fragmentTransaction.commit();
+//        }
+}

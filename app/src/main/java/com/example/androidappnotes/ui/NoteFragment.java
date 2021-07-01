@@ -21,7 +21,6 @@ import com.example.androidappnotes.observer.Publisher;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
@@ -30,7 +29,7 @@ public class NoteFragment extends Fragment {
 
     public static final String CURRENT_NOTE = "currentNote";
     public static final String CURRENT_DATA = "currentData";
-    private NoteData note;
+    private NoteData noteData;
     private Publisher publisher;
 
 
@@ -57,9 +56,9 @@ public class NoteFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            note = getArguments().getParcelable(CURRENT_NOTE);
+            noteData = getArguments().getParcelable(CURRENT_NOTE);//CURRENT_NOTE = ARG_CARD_DATA
         }
-        if (note == null) {
+        if (noteData == null) {
             isNewNote = true;
         }
     }
@@ -82,9 +81,9 @@ public class NoteFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         //только тут
         initView(view);
-        if (note != null) {
-            color = note.getColor();
-            dateOfCreation = note.getCreationDate();
+        if (noteData != null) {
+            color = noteData.getColor();
+            dateOfCreation = noteData.getCreationDate();
             populateView(view);
         }
         if (isNewNote) {
@@ -110,13 +109,13 @@ public class NoteFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        note = collectNote();
+        noteData = collectNote();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        publisher.notifySingle(note);
+        publisher.notifySingle(noteData);
     }
 
     private NoteData collectNote() {
@@ -126,7 +125,12 @@ public class NoteFragment extends Fragment {
         if (isNewNote) {
             isNewNote = false;
         }
-
+        if (noteData != null){
+            NoteData answer;
+            answer = new NoteData(title, content, date, getColor());
+            answer.setId(noteData.getId());
+            return answer;
+        }
         return new NoteData(title, content, dateOfCreation, color);
     }
 
@@ -141,10 +145,10 @@ public class NoteFragment extends Fragment {
             dateOfCreationText.setText(dateOfCreation);
             view.setBackgroundColor(color);
         } else {
-            dateOfCreationText.setText(note.getCreationDate());
-            titleText.setText(note.getTitle());
-            contentText.setText(note.getContent());
-            view.setBackgroundColor(note.getColor());
+            dateOfCreationText.setText(noteData.getCreationDate());
+            titleText.setText(noteData.getTitle());
+            contentText.setText(noteData.getContent());
+            view.setBackgroundColor(noteData.getColor());
         }
     }
 

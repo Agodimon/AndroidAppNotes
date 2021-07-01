@@ -4,17 +4,17 @@ import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.androidappnotes.data.NoteSource;
 import com.example.androidappnotes.data.NoteSourceResponse;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class NoteSource implements Parcelable, com.example.androidappnotes.data.NoteSource {
+public class NoteSourceImpl implements Parcelable, NoteSource {
 
 
 
@@ -22,25 +22,25 @@ public class NoteSource implements Parcelable, com.example.androidappnotes.data.
     private Resources resources;
     private int counter=0;
 
-    public NoteSource(Resources resources){
+    public NoteSourceImpl(Resources resources){
         this.resources=resources;
         notes=new ArrayList<>();
     }
 
-    protected NoteSource(Parcel in) {
+    protected NoteSourceImpl(Parcel in) {
         notes = in.createTypedArrayList(NoteData.CREATOR);
         counter = in.readInt();
     }
 
-    public static final Creator<NoteSource> CREATOR = new Creator<NoteSource>() {
+    public static final Creator<NoteSourceImpl> CREATOR = new Creator<NoteSourceImpl>() {
         @Override
-        public NoteSource createFromParcel(Parcel in) {
-            return new NoteSource(in);
+        public NoteSourceImpl createFromParcel(Parcel in) {
+            return new NoteSourceImpl(in);
         }
 
         @Override
-        public NoteSource[] newArray(int size) {
-            return new NoteSource[size];
+        public NoteSourceImpl[] newArray(int size) {
+            return new NoteSourceImpl[size];
         }
     };
 
@@ -55,7 +55,7 @@ public class NoteSource implements Parcelable, com.example.androidappnotes.data.
         dest.writeInt(counter);
     }
 
-    public NoteSource init(NoteSourceResponse noteSourceResponse) {
+    public NoteSourceImpl init(NoteSourceResponse noteSourceResponse) {
         if (noteSourceResponse!=null){
             noteSourceResponse.initialized(this);
         }

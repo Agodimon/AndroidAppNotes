@@ -11,14 +11,9 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.androidappnotes.NoteData;
-import com.example.androidappnotes.NoteSource;
+import com.example.androidappnotes.NoteSourceImpl;
 import com.example.androidappnotes.R;
-
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
-
+import com.example.androidappnotes.data.NoteSource;
 
 
 public class NotesAdapter extends RecyclerView.Adapter<com.example.androidappnotes.ui.NotesAdapter.ViewHolder> {
@@ -27,8 +22,7 @@ public class NotesAdapter extends RecyclerView.Adapter<com.example.androidappnot
     private NoteSource dataSource;
     private int menuPosition;
 
-    public NotesAdapter(NoteSource dataSource, Fragment fragment) {
-        this.dataSource = dataSource;
+    public NotesAdapter(Fragment fragment) {
         this.fragment = fragment;
     }
 
@@ -50,14 +44,19 @@ public class NotesAdapter extends RecyclerView.Adapter<com.example.androidappnot
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.getItemLayout().setBackgroundColor(dataSource.getNote(position).getColor());
-        holder.getTitleTextView().setText(dataSource.getNote(position).getTitle());
-        holder.getDateTextView().setText(dataSource.getNote(position).getCreationDate());
+        holder.getItemLayout().setBackgroundColor(dataSource.getNoteData(position).getColor());
+        holder.getTitleTextView().setText(dataSource.getNoteData(position).getTitle());
+        holder.getDateTextView().setText(dataSource.getNoteData(position).getCreationDate());
     }
 
     @Override
     public int getItemCount() {
         return dataSource.size();
+    }
+
+    public void setDataSource(NoteSource dataSource) {
+        this.dataSource = dataSource;
+        notifyDataSetChanged();
     }
 
     public interface MyClickListener {
@@ -81,7 +80,7 @@ public class NotesAdapter extends RecyclerView.Adapter<com.example.androidappnot
 
             itemLayout.setOnClickListener(v -> {
                 int position = getAdapterPosition();
-                myClickListener.onItemClick(position, dataSource.getNote(position));
+                myClickListener.onItemClick(position, dataSource.getNoteData(position));
             });
 
             itemLayout.setOnLongClickListener(v -> {

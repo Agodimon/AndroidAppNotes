@@ -25,12 +25,11 @@ public class NoteDataMapping {
     }
 
     public static NoteData toNoteData(String id, Map<String, Object> doc) {
-        Timestamp timeStamp = (Timestamp) doc.get(Fields.CREATION_DATE);
+//        Timestamp timeStamp = (Timestamp) doc.get(Fields.CREATION_DATE);
         NoteData answer = new NoteData((String) doc.get(Fields.TITLE),
                 (String)doc.get(Fields.CONTENT),
                 (String)doc.get(Fields.CREATION_DATE),
-                NoteFragment.newInstance().getColor()
-        );
+3        );
         answer.setId(id);
         return answer;
     }
