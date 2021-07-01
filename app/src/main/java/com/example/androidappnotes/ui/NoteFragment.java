@@ -21,6 +21,7 @@ import com.example.androidappnotes.observer.Publisher;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
@@ -121,9 +122,11 @@ public class NoteFragment extends Fragment {
     private NoteData collectNote() {
         String title = Objects.requireNonNull(this.titleText.getText()).toString();
         String content = Objects.requireNonNull(this.contentText.getText()).toString();
+        String date = dateOfCreation;
         if (isNewNote) {
             isNewNote = false;
         }
+
         return new NoteData(title, content, dateOfCreation, color);
     }
 

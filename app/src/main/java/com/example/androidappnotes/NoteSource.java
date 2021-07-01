@@ -4,6 +4,8 @@ import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.androidappnotes.data.NoteSourceResponse;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,7 +55,11 @@ public class NoteSource implements Parcelable, com.example.androidappnotes.data.
         dest.writeInt(counter);
     }
 
-    public NoteSource init() {
+    public NoteSource init(NoteSourceResponse noteSourceResponse) {
+        if (noteSourceResponse!=null){
+            noteSourceResponse.initialized(this);
+        }
+
         NoteData[] notesArray = new NoteData[]{
                 new NoteData(resources.getString(R.string.first_note_title),
                         resources.getString(R.string.first_note_content),

@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class NoteData implements Parcelable {
+    private String id;
     private String title;
     private String content;
     public static final Creator<NoteData> CREATOR = new Creator<NoteData>() {
@@ -28,7 +29,7 @@ public class NoteData implements Parcelable {
         this.color = color;
     }
 
-    protected NoteData(Parcel in) {
+    public NoteData(Parcel in) {
         title = in.readString();
         content = in.readString();
         creationDate = in.readString();
@@ -66,6 +67,14 @@ public class NoteData implements Parcelable {
 
     public void setColor(int color) {
         this.color = color;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
 

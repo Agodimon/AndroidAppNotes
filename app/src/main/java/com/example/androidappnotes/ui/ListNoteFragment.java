@@ -24,6 +24,7 @@ import android.content.Context;
 import com.example.androidappnotes.NoteData;
 import com.example.androidappnotes.NoteSource;
 import com.example.androidappnotes.R;
+import com.example.androidappnotes.data.NoteSourceResponse;
 import com.example.androidappnotes.observer.Publisher;
 
 import static com.example.androidappnotes.ui.NoteFragment.CURRENT_DATA;
@@ -65,7 +66,7 @@ public class ListNoteFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (data == null) {
-            data = new NoteSource(getResources()).init();
+            data = new NoteSource(getResources()).init(com.example.androidappnotes.data.NoteSource::clearCardNote);
         }
     }
 
@@ -129,7 +130,7 @@ public class ListNoteFragment extends Fragment {
     private void initView(View view) {
         recyclerView = view.findViewById(R.id.notes_recycler_view);
 // Получим источник данных для списка
-        data = new NoteSource(getResources()).init();
+        data = new NoteSource(getResources()).init(com.example.androidappnotes.data.NoteSource::clearCardNote);
         initRecyclerView();
     }
 
