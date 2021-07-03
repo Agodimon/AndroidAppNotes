@@ -1,4 +1,5 @@
 package com.example.androidappnotes;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,7 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.textfield.TextInputEditText;
 
-
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -56,7 +57,7 @@ public class NoteFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        MainActivity activity = (MainActivity)context;
+        com.example.androidappnotes.MainActivity activity = (com.example.androidappnotes.MainActivity)context;
         publisher = activity.getPublisher();
     }
 
@@ -66,10 +67,11 @@ public class NoteFragment extends Fragment {
         super.onDetach();
     }
 
-
+    @Nullable
+    @org.jetbrains.annotations.Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_note, container, false);
+    public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_description_of_notes, container, false);
         initView(view);
 
         if (noteData != null) {

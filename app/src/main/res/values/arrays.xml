@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="colors">
-        <item>@color/navajo_white</item>
-        <item>@color/hot_pink</item>
-        <item>@color/plum</item>
-        <item>@color/powder_blue</item>
-        <item>@color/yellow_green</item>
-        <item>@color/peru</item>
-        <item>@color/pale_green</item>
-        <item>@color/light_sky_blue</item>
-        <item>@color/dark_salmon</item>
-        <item>@color/olive</item>
-        <item>@color/medium_slate_blue</item>
-        <item>@color/dark_turquoise</item>
-    </array>
     <string-array name="notes">
         <item>Заметка_1</item>
         <item>Заметка_2</item>
@@ -41,40 +27,8 @@
         <item>@string/description2</item>
         <item>@string/description3</item>
         <item>@string/description4</item>
-        <item>@string/description5</item>
-        <item>@string/description6</item>
-        <item>@string/description7</item>
-        <item>@string/description8</item>
-        <item>@string/description9</item>
-        <item>@string/description10</item>
-        <item>@string/description11</item>
-        <item>@string/description12</item>
-        <item>@string/description13</item>
-        <item>@string/description14</item>
-        <item>@string/description15</item>
-        <item>@string/description16</item>
-        <item>@string/description17</item>
-        <item>@string/description18</item>
-        <item>@string/description19</item>
+
     </string-array>
-    <string name="description1">Describe №1</string>
-    <string name="description2">Describe №2</string>
-    <string name="description3">Describe №3</string>
-    <string name="description4">Describe №4</string>
-    <string name="description5">Describe №5</string>
-    <string name="description6">Describe №6</string>
-    <string name="description7">Describe №7</string>
-    <string name="description8">Describe №8</string>
-    <string name="description9">Describe №9</string>
-    <string name="description10">Describe №10</string>
-    <string name="description11">Describe №11</string>
-    <string name="description12">Describe №12</string>
-    <string name="description13">Describe №13</string>
-    <string name="description14">Describe №14</string>
-    <string name="description15">Describe №15</string>
-    <string name="description16">Describe №16</string>
-    <string name="description17">Describe №17</string>
-    <string name="description18">Describe №18</string>
-    <string name="description19">Describe №19</string>
+
 
 </resources>

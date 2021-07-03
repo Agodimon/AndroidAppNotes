@@ -1,5 +1,6 @@
 package com.example.androidappnotes;
 
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,24 +14,23 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
-import com.example.androidappnotes.ui.NotesFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import com.example.androidappnotes.observer.Publisher;
-
+import com.example.androidappnotes.ui.NotesJournalFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     private Publisher publisher = new Publisher();
-    private Navigation navigation;
+    private com.example.androidappnotes.Navigation navigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        navigation = new Navigation(getSupportFragmentManager());
+        navigation = new com.example.androidappnotes.Navigation(getSupportFragmentManager());
         initView();
-        Fragment fragment = NotesFragment.newInstance();
+        Fragment fragment = NotesJournalFragment.newInstance();
         getNavigation().addFragment(fragment, false);
 
     }
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         return publisher;
     }
 
-    public Navigation getNavigation() {
+    public com.example.androidappnotes.Navigation getNavigation() {
         return navigation;
     }
 
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        // Обработка выбора пункта меню приложения (активити)
         int id = item.getItemId();
         if (navigateFragment(id)) {
             return true;
@@ -90,9 +90,11 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean navigateFragment(int id) {
         switch (id) {
-
-            case R.id.action_main:
-                Toast.makeText(this, getResources().getString(R.string.main), Toast.LENGTH_LONG).show();
+            case R.id.action_settings:
+                Toast.makeText(this, getResources().getString(R.string.settings), Toast.LENGTH_LONG).show();
+                return true;
+           case R.id.action_main:
+               Toast.makeText(this, getResources().getString(R.string.main), Toast.LENGTH_LONG).show();
                 return true;
         }
         return false;
@@ -101,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         MenuItem search = menu.findItem(R.id.action_search); // поиск пунктаменю поиска
         SearchView searchText = (SearchView) search.getActionView(); // строкапоиска
         searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -122,3 +124,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

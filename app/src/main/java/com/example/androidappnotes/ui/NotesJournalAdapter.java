@@ -1,4 +1,5 @@
 package com.example.androidappnotes.ui;
+
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,18 +17,18 @@ import java.text.SimpleDateFormat;
 
 import com.example.androidappnotes.R;
 import com.example.androidappnotes.data.NoteData;
-import com.example.androidappnotes.data.NoteSourceInterf;
+import com.example.androidappnotes.data.NoteSource;
 
-public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
+public class NotesJournalAdapter extends RecyclerView.Adapter<NotesJournalAdapter.ViewHolder> {
 
     private final static String TAG = "NoteData";
-    private NoteSourceInterf dataSource;
+    private NoteSource dataSource;
     private final Fragment fragment;
     private OnItemClickListener itemClickListener;
     private int menuPosition;
 
 
-    public NotesAdapter(Fragment fragment) {
+    public NotesJournalAdapter(Fragment fragment) {
 
         this.fragment = fragment;
     }
@@ -44,7 +45,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
 
     @Override
-    public void onBindViewHolder(@NonNull NotesAdapter.ViewHolder holder,
+    public void onBindViewHolder(@NonNull ViewHolder holder,
                                  int position) {
         holder.setData(dataSource.getNoteData(position));
         Log.d(TAG, String.format("onBindViewHolder - %d", position));
@@ -65,7 +66,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         this.itemClickListener = itemClickListener;
     }
 
-    public void setDataSource(NoteSourceInterf dataSource) {
+    public void setDataSource(NoteSource dataSource) {
         this.dataSource = dataSource;
         notifyDataSetChanged();
     }
@@ -122,7 +123,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         public void setData(NoteData data){
             titleTextView.setText(data.getTitle());
             dateTextView.setText(data.getDescription());
-            date.setText(new SimpleDateFormat("dd-MM-yy").format(data.getDate()));
+           date.setText(new SimpleDateFormat("dd-MM-yy").format(data.getDate()));
         }
     }
 }

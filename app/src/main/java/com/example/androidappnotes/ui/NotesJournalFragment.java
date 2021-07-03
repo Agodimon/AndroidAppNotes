@@ -1,5 +1,6 @@
 package com.example.androidappnotes.ui;
 
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -18,61 +19,42 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
 
 import com.example.androidappnotes.MainActivity;
 import com.example.androidappnotes.Navigation;
 import com.example.androidappnotes.NoteFragment;
 import com.example.androidappnotes.R;
 import com.example.androidappnotes.data.NoteData;
-import com.example.androidappnotes.data.NoteSourceInterf;
-import com.example.androidappnotes.data.NotesSourceInterfFirebaseImpl;
+import com.example.androidappnotes.data.NoteSource;
+import com.example.androidappnotes.data.NoteSourceFirebaseImpl;
 import com.example.androidappnotes.data.NoteSourceResponse;
 import com.example.androidappnotes.observer.Observer;
 import com.example.androidappnotes.observer.Publisher;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.Date;
-import java.util.UUID;
-
-public class NotesFragment extends Fragment {
+public class NotesJournalFragment extends Fragment {
 
     private static final int MY_DEFAULT_DURATION = 1000;
-    private NoteSourceInterf data;
-    private NotesAdapter adapter;
+    private NoteSource data;
+    private NotesJournalAdapter adapter;
     private RecyclerView recyclerView;
     private Navigation navigation;
     private Publisher publisher;
-    private FloatingActionButton fab;
 
 
-    public static NotesFragment newInstance() {
-        return new NotesFragment();
-    }
 
-    @Override
-    public void onCreate(@Nullable  Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        MainActivity activity = (MainActivity) getActivity();
-        navigation = activity.getNavigation();
-        publisher = activity.getPublisher();
-        publisher.subscribe(new Observer() {
-            @Override
-            public void updateNoteData(NoteData noteData) {
-                data.addNoteData(noteData);
-                adapter.notifyItemInserted(0);
-                recyclerView.scrollToPosition(0);
-            }
-        });
+    public static  NotesJournalFragment newInstance() {
+        return new NotesJournalFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_notes, container, false);
+        View view = inflater.inflate(R.layout.notes_journal_fragment, container, false);
         setHasOptionsMenu(true);
         initRecyclerView(view);
-        data = new NotesSourceInterfFirebaseImpl().init(new NoteSourceResponse() {
+        data = new NoteSourceFirebaseImpl().init(new NoteSourceResponse() {
             @Override
-            public void initialized(NoteSourceInterf noteData) {
+            public void initialized(NoteSource noteData) {
                 adapter.notifyDataSetChanged();
             }
         });
@@ -80,15 +62,14 @@ public class NotesFragment extends Fragment {
         return view;
     }
 
+
+
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        fab = view.findViewById(R.id.fab_add_note);
-        fab.setOnClickListener(v -> {
-            NoteData note = new NoteData(String.valueOf(System.currentTimeMillis()), "354354564563456", new Date());
-            note.setId(UUID.randomUUID().toString());
-            publisher.notifySingle(note);
-        });
+    public void onAttach(@NonNull @NotNull Context context) {
+        super.onAttach(context);
+        MainActivity activity = (MainActivity)context;
+        navigation = activity.getNavigation();
+        publisher = activity.getPublisher();
     }
 
 
@@ -102,15 +83,15 @@ public class NotesFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.context_menu, menu);
+        inflater.inflate(R.menu.contex_menu_clear, menu);
     }
 
 
     @Override
-    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(@NonNull @NotNull ContextMenu menu, @NonNull @NotNull View v, @Nullable @org.jetbrains.annotations.Nullable ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = requireActivity().getMenuInflater();
-        inflater.inflate(R.menu.context_menu_2, menu);
+        inflater.inflate(R.menu.contnex_menu_add_edit, menu);
     }
 
     @Override
@@ -121,13 +102,24 @@ public class NotesFragment extends Fragment {
 
 
     @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
+    public boolean onContextItemSelected(@NonNull @NotNull MenuItem item) {
         return onItemSelected(item.getItemId()) || super.onContextItemSelected(item);
     }
 
 
     private boolean onItemSelected(int menuItem) {
         switch (menuItem) {
+            case R.id.action_add:
+                navigation.addFragment(NoteFragment.newInstance(), true);
+                publisher.subscribe(new Observer() {
+                    @Override
+                    public void updateNoteData(NoteData noteData) {
+                        data.addNoteData(noteData);
+                        adapter.notifyItemInserted(0);
+                        recyclerView.scrollToPosition(0);
+                    }
+                });
+                return true;
             case R.id.action_update:
                 int updatePosition = adapter.getMenuPosition();
                 navigation.addFragment(NoteFragment.newInstance(data.getNoteData(updatePosition)), true);
@@ -158,12 +150,12 @@ public class NotesFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new NotesAdapter(this);
+        adapter = new NotesJournalAdapter(this);
         adapter.setOnItemClickListener((view1, position) -> {
             navigation.addFragment(NoteFragment.newInstance(data.getNoteData(position)),
                     true);
             publisher.subscribe(note1 -> {
-                adapter.notifyItemChanged(position);
+              adapter.notifyItemChanged(position);
             });
         });
 
@@ -183,3 +175,8 @@ public class NotesFragment extends Fragment {
     }
 
 }
+
+
+
+
+

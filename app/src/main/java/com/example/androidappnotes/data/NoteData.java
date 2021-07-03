@@ -1,9 +1,5 @@
 package com.example.androidappnotes.data;
 
-
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,7 +7,7 @@ import java.util.Date;
 
 public class NoteData implements Parcelable {
 
-    private String id;
+    private String id; // идентификатор
     private String title;
     private String description;
     private Date date;
@@ -83,4 +79,3 @@ public class NoteData implements Parcelable {
         return id;
     }
 }
-

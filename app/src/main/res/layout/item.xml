@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:textSize="@dimen/TitleItemList"
-        >
+        tools:text="@string/Title">
 
         <TextView
             android:id="@+id/first_tv_of_item"

@@ -8,23 +8,23 @@ import java.util.List;
 
 import com.example.androidappnotes.R;
 
-public class NoteSourceInterfaceImpl implements  NoteSourceInterf {
-    private List<NoteData> noteDataSource;
+public class NoteDataSourceImpl implements com.example.androidappnotes.data.NoteSource {
+    private List<com.example.androidappnotes.data.NoteData> noteDataSource;
     private Resources resources;
 
 
-    public NoteSourceInterfaceImpl(Resources resources) {
+    public NoteDataSourceImpl(Resources resources) {
         this.resources = resources;
         noteDataSource = new ArrayList<>(20);
     }
 
 
-    public NoteSourceInterfaceImpl init(NoteSourceResponse noteSourceResponse){
+    public NoteDataSourceImpl init(com.example.androidappnotes.data.NoteSourceResponse noteSourceResponse){
         String[] titles = resources.getStringArray(R.array.notes);
         String[] descriptions = resources.getStringArray(R.array.descriptions);
 
         for(int i = 0; i < descriptions.length; i++){
-            noteDataSource.add(new NoteData(titles[i], descriptions[i], Calendar.getInstance().getTime()));
+            noteDataSource.add(new com.example.androidappnotes.data.NoteData(titles[i], descriptions[i], Calendar.getInstance().getTime()));
         }
 
         if (noteSourceResponse != null) {
@@ -34,12 +34,8 @@ public class NoteSourceInterfaceImpl implements  NoteSourceInterf {
         return this;
     }
 
-
-
-
-
     @Override
-    public NoteData getNoteData(int position) {
+    public com.example.androidappnotes.data.NoteData getNoteData(int position) {
         return noteDataSource.get(position);
     }
 
@@ -54,12 +50,12 @@ public class NoteSourceInterfaceImpl implements  NoteSourceInterf {
     }
 
     @Override
-    public void updateNoteData(int position, NoteData noteData) {
+    public void updateNoteData(int position, com.example.androidappnotes.data.NoteData noteData) {
         noteDataSource.set(position, noteData);
     }
 
     @Override
-    public void addNoteData(NoteData noteData) {
+    public void addNoteData(com.example.androidappnotes.data.NoteData noteData) {
         noteDataSource.add(noteData);
     }
 
