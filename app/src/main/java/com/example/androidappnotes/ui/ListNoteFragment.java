@@ -13,134 +13,123 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.Calendar;
 import java.util.Objects;
 import android.content.Context;
 import com.example.androidappnotes.NoteData;
+import com.example.androidappnotes.NoteSource;
 import com.example.androidappnotes.R;
+import com.example.androidappnotes.observer.Publisher;
+
+import static com.example.androidappnotes.ui.NoteFragment.CURRENT_DATA;
+import static com.example.androidappnotes.ui.NoteFragment.CURRENT_NOTE;
 
 
 public class ListNoteFragment extends Fragment {
 
     private boolean isLandscape;
     private NoteData[] notes;
-    private NoteData currentNote;
+
+
+    private com.example.androidappnotes.NoteData currentNote;
+    private NoteSource data;
+    private NotesAdapter adapter;
+    private RecyclerView recyclerView;
+    private com.example.androidappnotes.ui.Navigation navigation;
+    private Publisher publisher;
+    private boolean moveToLastPosition;
+
+    public ListNoteFragment() {
+    }
+
+    public static ListNoteFragment newInstance() {
+        return new ListNoteFragment();
+    }
 
 
     @Override
     public void onAttach(@NonNull Context context) {
-
         super.onAttach(context);
-
-        Configuration configuration = getResources().getConfiguration();
-        isLandscape=configuration.orientation==Configuration.ORIENTATION_LANDSCAPE;
-
+        com.example.androidappnotes.MainActivity activity = (com.example.androidappnotes.MainActivity) context;
+        navigation = activity.getNavigation();
+        publisher = activity.getPublisher();
     }
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (data == null) {
+            data = new NoteSource(getResources()).init();
+        }
+    }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+
             return inflater.inflate(R.layout.fragment_list_of_notes, container, false);
+
         }
 
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            initNotes();
-            RecyclerView recyclerView = view.findViewById(R.id.notes_recycler_view);
-            initRecyclerView(recyclerView, notes);
+            recyclerView = view.findViewById(R.id.notes_recycler_view);
+            initRecyclerView(recyclerView, data);
+            setHasOptionsMenu(true);
         }
 
-        private void initNotes() {
-            notes = new NoteData[]{
-                    new NoteData(getString(R.string.first_note_title),
-                            getString(R.string.first_note_content),
-                            Calendar.getInstance(),
-                            ContextCompat.getColor(requireContext(), R.color.navajo_white)),
-                    new NoteData(getString(R.string.second_note_title),
-                            getString(R.string.second_note_content),
-                            Calendar.getInstance(),
-                            ContextCompat.getColor(getContext(), R.color.hot_pink)),
-                    new NoteData(getString(R.string.third_note_title),
-                            getString(R.string.third_note_content),
-                            Calendar.getInstance(),
-                            ContextCompat.getColor(getContext(), R.color.plum)),
-                    new NoteData(getString(R.string.fourth_note_title),
-                            getString(R.string.fourth_note_content),
-                            Calendar.getInstance(),
-                            ContextCompat.getColor(getContext(), R.color.powder_blue)),
-                    new NoteData(getString(R.string.fifth_note_title),
-                            getString(R.string.fifth_note_content),
-                            Calendar.getInstance(),
-                            ContextCompat.getColor(getContext(), R.color.yellow_green)),
-                    new NoteData(getString(R.string.sixth_note_title),
-                            getString(R.string.sixth_note_content),
-                            Calendar.getInstance(),
-                            ContextCompat.getColor(getContext(), R.color.peru)),
-                    new NoteData(getString(R.string.seventh_note_title),
-                            getString(R.string.seventh_note_content),
-                            Calendar.getInstance(),
-                            ContextCompat.getColor(getContext(), R.color.pale_green)),
-                    new NoteData(getString(R.string.eighth_note_title),
-                            getString(R.string.eighth_note_content),
-                            Calendar.getInstance(),
-                            ContextCompat.getColor(getContext(), R.color.light_sky_blue)),
-                    new NoteData(getString(R.string.ninth_note_title),
-                            getString(R.string.ninth_note_content),
-                            Calendar.getInstance(),
-                            ContextCompat.getColor(getContext(), R.color.dark_salmon)),
-                    new NoteData(getString(R.string.tenth_note_title),
-                            getString(R.string.tenth_note_content),
-                            Calendar.getInstance(),
-                            ContextCompat.getColor(getContext(), R.color.olive)),
-                    new NoteData(getString(R.string.eleventh_note_title),
-                            getString(R.string.eleventh_note_content),
-                            Calendar.getInstance(),
-                            ContextCompat.getColor(getContext(), R.color.medium_slate_blue)),
-                    new NoteData(getString(R.string.twelfth_note_title),
-                            getString(R.string.twelfth_note_content),
-                            Calendar.getInstance(),
-                            ContextCompat.getColor(getContext(), R.color.dark_turquoise)),
-                    new NoteData(getString(R.string.tenth_note_title),
-                            getString(R.string.tenth_note_content),
-                            Calendar.getInstance(),
-                            ContextCompat.getColor(getContext(), R.color.olive)),
-                    new NoteData(getString(R.string.eleventh_note_title),
-                            getString(R.string.eleventh_note_content),
-                            Calendar.getInstance(),
-                            ContextCompat.getColor(getContext(), R.color.medium_slate_blue)),
-                    new NoteData(getString(R.string.twelfth_note_title),
-                            getString(R.string.twelfth_note_content),
-                            Calendar.getInstance(),
-                            ContextCompat.getColor(getContext(), R.color.dark_turquoise)),
+    @Override
+    public void onDetach() {
+        navigation = null;
+        publisher = null;
+        super.onDetach();
+    }
 
-            };
+    private void initRecyclerView(RecyclerView recyclerView, NoteSource data) {
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        if (moveToLastPosition) {
+            recyclerView.smoothScrollToPosition(data.size() - 1);
+            moveToLastPosition = false;
         }
 
-        private void initRecyclerView(RecyclerView recyclerView, NoteData[] notes) {
-            recyclerView.setHasFixedSize(true);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(layoutManager);
-            NotesAdapter adapter = new NotesAdapter(notes);
-            adapter.setOnItemClickListener((position, note) -> {
-                currentNote = note;
-                showNote(currentNote);
+        adapter = new NotesAdapter(data, this);
+        adapter.setOnItemClickListener((position, note) -> {
+            navigation.addFragment(NoteFragment.newInstance(data.getNote(position)),
+                    true);
+            publisher.subscribe(note1 -> {
+                data.changeNote(position, note1);
+                adapter.notifyItemChanged(position);
             });
-            recyclerView.setAdapter(adapter);
-            DividerItemDecoration itemDecoration = new DividerItemDecoration(requireContext(),
-                    LinearLayoutManager.VERTICAL);
-            itemDecoration.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(getContext(), R.drawable.separator)));
-            recyclerView.addItemDecoration(itemDecoration);
+        });
+
+        recyclerView.setAdapter(adapter);
+        DividerItemDecoration itemDecoration = new DividerItemDecoration
+                (requireContext(), LinearLayoutManager.VERTICAL);
+        itemDecoration.setDrawable(Objects.requireNonNull
+                (ContextCompat.getDrawable(getContext(), R.drawable.separator)));
+        recyclerView.addItemDecoration(itemDecoration);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putParcelable(CURRENT_NOTE, currentNote);
+        outState.putParcelable(CURRENT_DATA, data);
+        super.onSaveInstanceState(outState);
+    }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            data = savedInstanceState.getParcelable(CURRENT_DATA);
+            currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
+        } else {
+            currentNote = data.getNote(0);
         }
-
-        @Override
-        public void onSaveInstanceState(@NonNull Bundle outState) {
-            outState.putParcelable(NoteFragment.CURRENT_NOTE, currentNote);
-            super.onSaveInstanceState(outState);
-        }
-
-
+    }
 
         private void showNote(NoteData currentNote) {
             if (isLandscape) {

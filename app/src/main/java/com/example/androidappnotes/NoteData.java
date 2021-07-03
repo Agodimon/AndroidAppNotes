@@ -4,26 +4,24 @@ package com.example.androidappnotes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Calendar;
-
 public class NoteData implements Parcelable {
-    public static final Creator<NoteData> CREATOR = new Creator<NoteData>() {
-        @Override
-        public NoteData createFromParcel(Parcel in) {
-            return new NoteData(in);
-        }
-
-        @Override
-        public NoteData[] newArray(int size) {
-            return new NoteData[size];
-        }
-    };
     private String title;
     private String content;
-    private Calendar creationDate;
-    private int color;
+    public static final Creator<NoteData> CREATOR = new Creator<NoteData>() {
+        @Override
+        public com.example.androidappnotes.NoteData createFromParcel(Parcel in) {
+            return new com.example.androidappnotes.NoteData(in);
+        }
 
-    public NoteData(String title, String content, Calendar creationDate, int color) {
+        @Override
+        public com.example.androidappnotes.NoteData[] newArray(int size) {
+            return new com.example.androidappnotes.NoteData[size];
+        }
+    };
+    private int color;
+    private String creationDate;
+
+    public NoteData(String title, String content, String creationDate, int color) {
         this.title = title;
         this.content = content;
         this.creationDate = creationDate;
@@ -33,21 +31,21 @@ public class NoteData implements Parcelable {
     protected NoteData(Parcel in) {
         title = in.readString();
         content = in.readString();
-        creationDate = (Calendar) in.readSerializable();
+        creationDate = in.readString();
         color = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
         dest.writeString(content);
-        dest.writeSerializable(creationDate);
+        dest.writeString(creationDate);
         dest.writeInt(color);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public String getTitle() {
@@ -58,12 +56,16 @@ public class NoteData implements Parcelable {
         return content;
     }
 
-    public Calendar getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
     public int getColor() {
         return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 }
 
