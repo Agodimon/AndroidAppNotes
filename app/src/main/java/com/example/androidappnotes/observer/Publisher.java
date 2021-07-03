@@ -1,6 +1,6 @@
 package com.example.androidappnotes.observer;
 
-import com.example.androidappnotes.NoteData;
+import com.example.androidappnotes.data.NoteData;
 
 import java.util.ArrayList;
 import java.util.List;

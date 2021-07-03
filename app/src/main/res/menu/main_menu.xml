@@ -1,40 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-<!--    <item-->
-<!--        android:id="@+id/menu_search"-->
-<!--        android:icon="@drawable/search_24"-->
-<!--        android:orderInCategory="1"-->
-<!--        android:title="@string/menu_search"-->
-<!--        app:actionViewClass="androidx.appcompat.widget.SearchView"-->
-<!--        app:showAsAction="always" />-->
 
-<!--    <item-->
-<!--        android:id="@+id/menu_add_note"-->
+    <item
+        android:id="@+id/action_main"
+        android:icon="@android:drawable/ic_menu_compass"
+        android:orderInCategory="10"
+        android:title="@string/main"
+        app:showAsAction="always" />
 
-<!--        android:icon="@drawable/add_photo_24"-->
-<!--        android:orderInCategory="2"-->
-<!--        android:title="@string/menu_add_note"-->
-<!--        app:showAsAction="ifRoom" />-->
+    <item
+        android:id="@+id/action_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:orderInCategory="5"
+        android:title="@string/search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always" />
 
-<!--    <item-->
-<!--        android:id="@+id/menu_sort"-->
-<!--        android:icon="@drawable/sort_24"-->
-<!--        android:orderInCategory="3"-->
-<!--        android:title="@string/menu_sort"-->
-<!--        app:showAsAction="ifRoom" />-->
 
-<!--    <item-->
-<!--        android:id="@+id/menu_send"-->
-<!--        android:icon="@drawable/send_24"-->
-<!--        android:orderInCategory="4"-->
-<!--        android:title="@string/menu_send"-->
-<!--        app:showAsAction="ifRoom" />-->
+    <item
+        android:id="@+id/action_add"
+        android:icon="@android:drawable/ic_menu_add"
+        android:orderInCategory="1"
+        android:title="@string/add"
+        app:showAsAction="always"/>
 
-<!--    <item-->
-<!--        android:id="@+id/menu_add_photo"-->
-<!--        android:icon="@drawable/add_photo_24"-->
-<!--        android:orderInCategory="5"-->
-<!--        android:title="@string/menu_add_photo"-->
-<!--        app:showAsAction="ifRoom" />-->
+
+    <item
+        android:id="@+id/action_clear"
+        android:icon="@android:drawable/ic_notification_clear_all"
+        android:orderInCategory="10"
+        android:title="@string/clear"
+        app:showAsAction="never" />
 </menu>

@@ -46,5 +46,9 @@
     <string name="clear">Clear</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
+    <string name="navigation_drawer_close">Close</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="main">main</string>
+    <string name="search">search</string>
 
 </resources>
