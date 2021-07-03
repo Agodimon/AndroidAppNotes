@@ -34,11 +34,9 @@ public class MainActivity extends AppCompatActivity {
         getNavigation().addFragment(fragment, false);
 
     }
-
     private void initView() {
         Toolbar toolbar = initToolbar();
         initDrawer(toolbar);
-
     }
 
     public Publisher getPublisher() {
