@@ -1,15 +1,16 @@
 package com.example.androidappnotes.observer;
 
-import com.example.androidappnotes.NoteData;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.androidappnotes.data.NoteData;
+
 public class Publisher {
-    private final List<Observer> observers;
+
+    private List<Observer> observers;
 
     public Publisher(){
-        observers=new ArrayList<>();
+        observers = new ArrayList<>();
     }
 
     public void subscribe(Observer observer){
@@ -21,8 +22,8 @@ public class Publisher {
     }
 
     public void notifySingle(NoteData noteData){
-        for (Observer observer:observers) {
-            observer.updateNoteData(noteData);
+        for (Observer observer : observers){
+            observer.updateNoteData (noteData);
             unsubscribe(observer);
         }
     }
