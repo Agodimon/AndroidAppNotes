@@ -78,15 +78,13 @@ public class NotesJournalAdapter extends RecyclerView.Adapter<NotesJournalAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private CardView cardView;
         private LinearLayout itemLayout;
-        private TextView titleTextView;
-        private TextView dateTextView;
-        private TextView date;
+        private final TextView titleTextView;
+        private final TextView dateTextView;
+        private final TextView date;
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
-            cardView = (CardView) itemView;
             itemLayout = itemView.findViewById(R.id.element_of_recycler_view);
             titleTextView = itemView.findViewById(R.id.first_tv_of_item);
             dateTextView = itemView.findViewById(R.id.second_tv_of_item);

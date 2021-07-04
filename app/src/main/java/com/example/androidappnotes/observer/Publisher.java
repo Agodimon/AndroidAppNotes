@@ -7,7 +7,7 @@ import com.example.androidappnotes.data.NoteData;
 
 public class Publisher {
 
-    private List<Observer> observers;
+    private final List<Observer> observers;
 
     public Publisher() {
         observers = new ArrayList<>();

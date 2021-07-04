@@ -9,8 +9,8 @@ import java.util.List;
 import com.example.androidappnotes.R;
 
 public class NoteDataSourceImpl implements com.example.androidappnotes.data.NoteSource {
-    private List<com.example.androidappnotes.data.NoteData> noteDataSource;
-    private Resources resources;
+    private final List<com.example.androidappnotes.data.NoteData> noteDataSource;
+    private final Resources resources;
 
 
     public NoteDataSourceImpl(Resources resources) {
