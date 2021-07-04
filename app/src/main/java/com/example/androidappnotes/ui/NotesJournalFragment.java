@@ -1,6 +1,5 @@
 package com.example.androidappnotes.ui;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -25,11 +24,8 @@ import com.example.androidappnotes.MainActivity;
 import com.example.androidappnotes.Navigation;
 import com.example.androidappnotes.NoteFragment;
 import com.example.androidappnotes.R;
-import com.example.androidappnotes.data.NoteData;
 import com.example.androidappnotes.data.NoteSource;
 import com.example.androidappnotes.data.NoteSourceFirebaseImpl;
-import com.example.androidappnotes.data.NoteSourceResponse;
-import com.example.androidappnotes.observer.Observer;
 import com.example.androidappnotes.observer.Publisher;
 
 public class NotesJournalFragment extends Fragment {
@@ -41,8 +37,6 @@ public class NotesJournalFragment extends Fragment {
     private Navigation navigation;
     private Publisher publisher;
 
-
-
     public static  NotesJournalFragment newInstance() {
         return new NotesJournalFragment();
     }
@@ -52,17 +46,10 @@ public class NotesJournalFragment extends Fragment {
         View view = inflater.inflate(R.layout.notes_journal_fragment, container, false);
         setHasOptionsMenu(true);
         initRecyclerView(view);
-        data = new NoteSourceFirebaseImpl().init(new NoteSourceResponse() {
-            @Override
-            public void initialized(NoteSource noteData) {
-                adapter.notifyDataSetChanged();
-            }
-        });
+        data = new NoteSourceFirebaseImpl().init(noteData -> adapter.notifyDataSetChanged());
         adapter.setDataSource(data);
         return view;
     }
-
-
 
     @Override
     public void onAttach(@NonNull @NotNull Context context) {
@@ -71,7 +58,6 @@ public class NotesJournalFragment extends Fragment {
         navigation = activity.getNavigation();
         publisher = activity.getPublisher();
     }
-
 
     @Override
     public void onDetach() {
@@ -96,7 +82,6 @@ public class NotesJournalFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
         return onItemSelected(item.getItemId()) || super.onOptionsItemSelected(item);
     }
 
@@ -111,15 +96,13 @@ public class NotesJournalFragment extends Fragment {
         switch (menuItem) {
             case R.id.action_add:
                 navigation.addFragment(NoteFragment.newInstance(), true);
-                publisher.subscribe(new Observer() {
-                    @Override
-                    public void updateNoteData(NoteData noteData) {
-                        data.addNoteData(noteData);
-                        adapter.notifyItemInserted(0);
-                        recyclerView.scrollToPosition(0);
-                    }
+                publisher.subscribe(noteData -> {
+                    data.addNoteData(noteData);
+                    adapter.notifyItemInserted(0);
+                    recyclerView.scrollToPosition(0);
                 });
                 return true;
+
             case R.id.action_update:
                 int updatePosition = adapter.getMenuPosition();
                 navigation.addFragment(NoteFragment.newInstance(data.getNoteData(updatePosition)), true);
@@ -128,11 +111,28 @@ public class NotesJournalFragment extends Fragment {
                     adapter.notifyItemChanged(updatePosition);
                 });
                 return true;
+
             case R.id.action_delete:
                 int deletePosition = adapter.getMenuPosition();
-                data.deleteNoteData(deletePosition);
-                adapter.notifyItemRemoved(deletePosition);
+                DeleteDialogFragment deleteDlgFragment = new DeleteDialogFragment();
+                deleteDlgFragment.setCancelable(false);
+                deleteDlgFragment.setOnDialogListener(new DeleteDialogListenerInterface() {
+                    @Override
+                    public void onDelete() {
+                        data.deleteNoteData(deletePosition);
+                        adapter.notifyItemRemoved(deletePosition);
+                        deleteDlgFragment.dismiss();
+                    }
+
+                    @Override
+                    public void onCancelDelete() {
+                        deleteDlgFragment.dismiss();
+                    }
+                });
+                deleteDlgFragment.show(requireActivity().getSupportFragmentManager(),
+                        "DeleteFragmentTag");
                 return true;
+
             case R.id.action_clear:
                 data.clearNoteData();
                 adapter.notifyDataSetChanged();
@@ -155,7 +155,7 @@ public class NotesJournalFragment extends Fragment {
             navigation.addFragment(NoteFragment.newInstance(data.getNoteData(position)),
                     true);
             publisher.subscribe(note1 -> {
-              adapter.notifyItemChanged(position);
+                adapter.notifyItemChanged(position);
             });
         });
 

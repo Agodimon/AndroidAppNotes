@@ -32,7 +32,6 @@ public class NoteFragment extends Fragment {
     private TextInputEditText description;
     private DatePicker datePicker;
 
-
     public static NoteFragment newInstance(NoteData noteData) {
         NoteFragment fragment = new NoteFragment();
         Bundle args = new Bundle();
@@ -57,7 +56,7 @@ public class NoteFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        com.example.androidappnotes.MainActivity activity = (com.example.androidappnotes.MainActivity)context;
+        com.example.androidappnotes.MainActivity activity = (com.example.androidappnotes.MainActivity) context;
         publisher = activity.getPublisher();
     }
 
@@ -94,7 +93,7 @@ public class NoteFragment extends Fragment {
     }
 
 
-    private NoteData collectNoteData(){
+    private NoteData collectNoteData() {
         Editable titleRaw = this.title.getText();
         String title = titleRaw == null ? "" : titleRaw.toString();
 
@@ -110,7 +109,7 @@ public class NoteFragment extends Fragment {
 
         } else {
 
-            answer = new NoteData(title,description,date);
+            answer = new NoteData(title, description, date);
         }
         return answer;
     }

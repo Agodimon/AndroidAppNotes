@@ -24,7 +24,7 @@ import java.util.Map;
 public class NoteSourceFirebaseImpl implements NoteSource {
 
     private static final String NOTES_COLLECTION = "notes";
-    private static  String TAG = "[NoteSourceFirebaseImpl]";
+    private static String TAG = "[NoteSourceFirebaseImpl]";
 
     private FirebaseFirestore store = FirebaseFirestore.getInstance();
     private CollectionReference collection = store.collection(NOTES_COLLECTION);
@@ -38,31 +38,22 @@ public class NoteSourceFirebaseImpl implements NoteSource {
 
         collection.orderBy(NoteDataMapping.Fields.DATE, Query.Direction.DESCENDING)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
-                        if (task. isSuccessful()){
-                            notesData = new ArrayList<>();
-                            for(QueryDocumentSnapshot document : task.getResult()) {
-                                Map<String, Object> doc = document.getData();
-                                String id = document.getId();
-                                com.example.androidappnotes.data.NoteData noteData = NoteDataMapping.toNoteData(id, doc);
-                                notesData.add(noteData);
-                            }
-                            Log.d(TAG, "succeess " + notesData.size() + " qnt");
-                            noteSourceResponse.initialized(NoteSourceFirebaseImpl.this);
-                        } else {
-                            Log.d(TAG, "get failed with ", task.getException());
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        notesData = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Map<String, Object> doc = document.getData();
+                            String id = document.getId();
+                            NoteData noteData = NoteDataMapping.toNoteData(id, doc);
+                            notesData.add(noteData);
                         }
+                        Log.d(TAG, "succeess " + notesData.size() + " qnt");
+                        noteSourceResponse.initialized(NoteSourceFirebaseImpl.this);
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull @NotNull Exception e) {
-                        Log.d(TAG, "get failed with ", e);
-
-                    }
-                });
+                .addOnFailureListener(e -> Log.d(TAG, "get failed with ", e));
 
         return this;
     }
@@ -77,7 +68,7 @@ public class NoteSourceFirebaseImpl implements NoteSource {
         if (notesData == null) {
             return 0;
         }
-        return  notesData.size();
+        return notesData.size();
     }
 
     @Override
@@ -96,18 +87,13 @@ public class NoteSourceFirebaseImpl implements NoteSource {
     @Override
     public void addNoteData(com.example.androidappnotes.data.NoteData noteData) {
         collection.add(NoteDataMapping.toDocument(noteData))
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        noteData.setId(documentReference.getId());
-                    }
-        });
+                .addOnSuccessListener(documentReference -> noteData.setId(documentReference.getId()));
 
     }
 
     @Override
     public void clearNoteData() {
-        for (com.example.androidappnotes.data.NoteData noteData: notesData) {
+        for (com.example.androidappnotes.data.NoteData noteData : notesData) {
             collection.document(noteData.getId()).delete();
         }
         notesData = new ArrayList<com.example.androidappnotes.data.NoteData>();

@@ -13,7 +13,7 @@ public class Navigation {
     }
 
 
-    public void addFragment(Fragment fragment, boolean useBackStack){
+    public void addFragment(Fragment fragment, boolean useBackStack) {
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.list_of_notes_fragment_container, fragment);
@@ -21,3 +21,4 @@ public class Navigation {
         fragmentTransaction.commit();
     }
 }
+
