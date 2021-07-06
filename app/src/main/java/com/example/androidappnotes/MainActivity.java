@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         Toolbar toolbar = initToolbar();
         initDrawer(toolbar);
-
     }
 
     public Publisher getPublisher() {
@@ -49,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         return navigation;
     }
 
-    // регистрация drawer
     private void initDrawer(Toolbar toolbar) {
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -59,18 +57,16 @@ public class MainActivity extends AppCompatActivity {
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        // Обработка навигационного меню
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
-            if (navigateFragment(id)){
+            if (navigateFragment(id)) {
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
             return false;
         });
     }
-
 
     private Toolbar initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -80,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Обработка выбора пункта меню приложения (активити)
         int id = item.getItemId();
         if (navigateFragment(id)) {
             return true;
@@ -93,13 +88,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 Toast.makeText(this, getResources().getString(R.string.settings), Toast.LENGTH_LONG).show();
                 return true;
-           case R.id.action_main:
-               Toast.makeText(this, getResources().getString(R.string.main), Toast.LENGTH_LONG).show();
+            case R.id.action_main:
+                Toast.makeText(this, getResources().getString(R.string.main), Toast.LENGTH_LONG).show();
                 return true;
         }
         return false;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

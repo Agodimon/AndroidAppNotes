@@ -9,8 +9,8 @@ import java.util.List;
 import com.example.androidappnotes.R;
 
 public class NoteDataSourceImpl implements com.example.androidappnotes.data.NoteSource {
-    private List<com.example.androidappnotes.data.NoteData> noteDataSource;
-    private Resources resources;
+    private final List<com.example.androidappnotes.data.NoteData> noteDataSource;
+    private final Resources resources;
 
 
     public NoteDataSourceImpl(Resources resources) {
@@ -19,11 +19,11 @@ public class NoteDataSourceImpl implements com.example.androidappnotes.data.Note
     }
 
 
-    public NoteDataSourceImpl init(com.example.androidappnotes.data.NoteSourceResponse noteSourceResponse){
+    public NoteDataSourceImpl init(com.example.androidappnotes.data.NoteSourceResponse noteSourceResponse) {
         String[] titles = resources.getStringArray(R.array.notes);
         String[] descriptions = resources.getStringArray(R.array.descriptions);
 
-        for(int i = 0; i < descriptions.length; i++){
+        for (int i = 0; i < descriptions.length; i++) {
             noteDataSource.add(new com.example.androidappnotes.data.NoteData(titles[i], descriptions[i], Calendar.getInstance().getTime()));
         }
 
@@ -58,7 +58,6 @@ public class NoteDataSourceImpl implements com.example.androidappnotes.data.Note
     public void addNoteData(com.example.androidappnotes.data.NoteData noteData) {
         noteDataSource.add(noteData);
     }
-
 
 
     @Override

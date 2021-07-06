@@ -7,11 +7,10 @@ import java.util.Date;
 
 public class NoteData implements Parcelable {
 
-    private String id; // идентификатор
+    private String id;
     private String title;
-    private String description;
-    private Date date;
-
+    private final String description;
+    private final Date date;
 
 
     public NoteData(String title, String description, Date date) {

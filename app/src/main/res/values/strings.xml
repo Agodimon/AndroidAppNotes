@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Notes App Lesson № 10</string>
+    <string name="app_name">Notes App Lesson № 11</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -19,7 +19,6 @@
     <string name="settings">settings</string>
     <string name="main">main</string>
     <string name="favorite">favorite</string>
-
     <string name="back">back</string>
     <string name="item1">item1</string>
     <string name="item2">item2</string>
@@ -37,6 +36,9 @@
     <string name="update">Изменить</string>
     <string name="delete">Удалить</string>
     <string name="first_note_title">First node</string>
+    <string name="delete_note_dialog_button_no">НЕТ</string>
+    <string name="confirm_delete_button">ДА</string>
+    <string name="title_dialog">Удалить заметку?</string>
 
 
 </resources>
