@@ -37,7 +37,7 @@ public class NotesJournalFragment extends Fragment {
     private Navigation navigation;
     private Publisher publisher;
 
-    public static  NotesJournalFragment newInstance() {
+    public static NotesJournalFragment newInstance() {
         return new NotesJournalFragment();
     }
 
@@ -54,7 +54,7 @@ public class NotesJournalFragment extends Fragment {
     @Override
     public void onAttach(@NonNull @NotNull Context context) {
         super.onAttach(context);
-        MainActivity activity = (MainActivity)context;
+        MainActivity activity = (MainActivity) context;
         navigation = activity.getNavigation();
         publisher = activity.getPublisher();
     }
@@ -91,7 +91,6 @@ public class NotesJournalFragment extends Fragment {
         return onItemSelected(item.getItemId()) || super.onContextItemSelected(item);
     }
 
-
     private boolean onItemSelected(int menuItem) {
         switch (menuItem) {
             case R.id.action_add:
@@ -102,16 +101,10 @@ public class NotesJournalFragment extends Fragment {
                     recyclerView.scrollToPosition(0);
                 });
                 return true;
-
             case R.id.action_update:
                 int updatePosition = adapter.getMenuPosition();
-                navigation.addFragment(NoteFragment.newInstance(data.getNoteData(updatePosition)), true);
-                publisher.subscribe(noteData -> {
-                    data.updateNoteData(updatePosition, noteData);
-                    adapter.notifyItemChanged(updatePosition);
-                });
+                isUpdatingDate(updatePosition);
                 return true;
-
             case R.id.action_delete:
                 int deletePosition = adapter.getMenuPosition();
                 DeleteDialogFragment deleteDlgFragment = new DeleteDialogFragment();
@@ -132,13 +125,20 @@ public class NotesJournalFragment extends Fragment {
                 deleteDlgFragment.show(requireActivity().getSupportFragmentManager(),
                         "DeleteFragmentTag");
                 return true;
-
             case R.id.action_clear:
                 data.clearNoteData();
                 adapter.notifyDataSetChanged();
                 return true;
         }
         return false;
+    }
+
+    private void isUpdatingDate(int updatePosition) {
+        navigation.addFragment(NoteFragment.newInstance(data.getNoteData(updatePosition)), true);
+        publisher.subscribe(noteData -> {
+            data.updateNoteData(updatePosition, noteData);
+            adapter.notifyItemChanged(updatePosition);
+        });
     }
 
 
@@ -152,11 +152,7 @@ public class NotesJournalFragment extends Fragment {
 
         adapter = new NotesJournalAdapter(this);
         adapter.setOnItemClickListener((view1, position) -> {
-            navigation.addFragment(NoteFragment.newInstance(data.getNoteData(position)),
-                    true);
-            publisher.subscribe(note1 -> {
-                adapter.notifyItemChanged(position);
-            });
+            isUpdatingDate(position);
         });
 
         recyclerView.setAdapter(adapter);
@@ -173,7 +169,6 @@ public class NotesJournalFragment extends Fragment {
         recyclerView.setItemAnimator(animator);
 
     }
-
 }
 
 
